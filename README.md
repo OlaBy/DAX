@@ -1,2 +1,2 @@
 # DAX
- DAX code
+My DAX project and challenges.
