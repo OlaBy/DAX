@@ -1,0 +1,12 @@
+21. Matches with highest scoring draw =
+VAR _table =
+    SUMMARIZE (
+        FILTER ( fact_matches, fact_matches[result] = "draw" ),
+        [match_id],
+        [match_name],
+        "score", MAX ( fact_matches[away_team_score] )
+    )
+VAR _top =
+    TOPN ( 1, _table, [score] )
+RETURN
+    CONCATENATEX ( _top, [match_name], ", ", [match_name], ASC )

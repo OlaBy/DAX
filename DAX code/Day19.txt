@@ -1,0 +1,10 @@
+19. Most goals scored in a match for one team =
+VAR _table =
+    SUMMARIZE (
+        fact_goals,
+        fact_goals[match_id],
+        fact_goals[team_id],
+        "goals", COUNT ( fact_goals[goal_id] )
+    )
+RETURN
+    CONVERT ( MAXX ( _table, [goals] ), STRING ) & " goals"

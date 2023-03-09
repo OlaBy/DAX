@@ -1,0 +1,12 @@
+24. Tournament with highest number of own goals =
+VAR _table =
+    SUMMARIZE (
+        FILTER ( fact_goals, fact_goals[own_goal] = 1 ),
+        fact_goals[tournament_id],
+        dim_tournaments[Tournament Name],
+        "goals", COUNT ( fact_goals[goal_id] )
+    )
+VAR _TOP =
+    TOPN ( 1, _table, [goals], DESC )
+RETURN
+    CONCATENATEX ( _TOP, [Tournament Name], ", " )

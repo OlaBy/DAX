@@ -1,0 +1,10 @@
+18. Match/s with biggest goal margin =
+VAR _table =
+    ADDCOLUMNS (
+        SUMMARIZE ( fact_matches, [match_name], [match_id], [home_team_score_margin] ),
+        "margin", ABS ( [home_team_score_margin] )
+    )
+VAR _top =
+    TOPN ( 1, _table, [margin], DESC )
+RETURN
+    CONCATENATEX ( _top, [match_name], ", ", [match_name] )

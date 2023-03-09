@@ -1,0 +1,13 @@
+23. Most and least goals in a tournament =
+VAR _table =
+    SUMMARIZE (
+        fact_goals,
+        fact_goals[tournament_id],
+        "goals", COUNT ( fact_goals[goal_id] )
+    )
+VAR _max =
+    MAXX ( _table, [goals] )
+VAR _min =
+    MINX ( _table, [goals] )
+RETURN
+    CONCATENATE ( _max, " goals, " ) & CONCATENATE ( _min, " goals" )

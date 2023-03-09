@@ -1,0 +1,13 @@
+25. Highest average goals per match =
+VAR _table =
+    ADDCOLUMNS (
+        SUMMARIZE (
+            fact_matches,
+            fact_matches[tournament_id],
+            "goals", SUMX ( fact_matches, [home_team_score] + [away_team_score] ),
+            "matches", DISTINCTCOUNT ( fact_matches[match_id] )
+        ),
+        "avg", DIVIDE ( [goals], [matches] )
+    )
+RETURN
+    ROUND ( MAXX ( _table, [avg] ), 2 ) & " goals"

@@ -1,0 +1,16 @@
+20. Matches with most goals scored for both teams =
+VAR _table =
+    ADDCOLUMNS (
+        SUMMARIZE (
+            fact_matches,
+            [match_name],
+            [match_id],
+            [home_team_score],
+            [away_team_score]
+        ),
+        "total score", ABS ( [home_team_score] ) + ABS ( [away_team_score] )
+    )
+VAR _top =
+    TOPN ( 1, _table, [total score], DESC )
+RETURN
+    CONCATENATEX ( _top, [match_name], ", ", [match_name] )

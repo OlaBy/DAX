@@ -1,0 +1,11 @@
+16. Players with most tournaments as captain =
+VAR _table =
+    SUMMARIZE (
+        FILTER ( fact_player_appearances, fact_player_appearances[captain] = 1 ),
+        dim_players[player name],
+        "tournaments", DISTINCTCOUNT ( fact_player_appearances[tournament_id] )
+    )
+VAR _top =
+    TOPN ( 1, _table, [tournaments], DESC )
+RETURN
+    CONCATENATEX ( _top, [player name], ", ", [player name] )

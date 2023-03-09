@@ -1,0 +1,11 @@
+17. Players with most goals scored =
+VAR _goals =
+    SUMMARIZE (
+        fact_goals,
+        dim_players[player name],
+        "goals", DISTINCTCOUNT ( fact_goals[goal_id] )
+    )
+VAR _top =
+    TOPN ( 1, _goals, [goals], DESC )
+RETURN
+    CONCATENATEX ( _top, [player name], ", ", [player name] )
