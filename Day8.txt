@@ -1,0 +1,22 @@
+8. Longest gap in years between titles =
+VAR _table =
+    SUMMARIZE ( ALL ( dim_tournaments ), [Winner], [End Date] )
+VAR _nextDate =
+    ADDCOLUMNS (
+        _table,
+        "Next date",
+            MINX (
+                FILTER (
+                    _table,
+                    AND (
+                        dim_tournaments[Winner] = EARLIER ( dim_tournaments[Winner] ),
+                        dim_tournaments[End Date] > EARLIER ( dim_tournaments[End Date] )
+                    )
+                ),
+                [End Date]
+            )
+    )
+VAR _days =
+    ADDCOLUMNS ( _nextDate, "Diff", DATEDIFF ( [End Date], [Next date], YEAR ) )
+RETURN
+    CONCATENATE ( MAXX ( _days, [Diff] ), " years" )

@@ -1,0 +1,29 @@
+5. Countries with most second place finishes =
+VAR _home_team =
+    SUMMARIZE (
+        FILTER (
+            ALL ( fact_matches ),
+            AND ( fact_matches[stage_name] = "final", [home_team_win] = 0 )
+        ),
+        [home_team_name],
+        [match_id]
+    )
+VAR _away_team =
+    SUMMARIZE (
+        FILTER (
+            ALL ( fact_matches ),
+            AND ( fact_matches[stage_name] = "final", [away_team_win] = 0 )
+        ),
+        [away_team_name],
+        [match_id]
+    )
+VAR _teams =
+    SUMMARIZE (
+        UNION ( _home_team, _away_team ),
+        [home_team_name],
+        "max", DISTINCTCOUNT ( fact_matches[match_id] )
+    )
+VAR _2nd =
+    FILTER ( _teams, [max] = MAXX ( _teams, [max] ) )
+RETURN
+    CONCATENATEX ( _2nd, [home_team_name], ", ", [home_team_name] )

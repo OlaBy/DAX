@@ -1,0 +1,11 @@
+6. Countries with most world cup appearances =
+VAR _teams =
+    SUMMARIZE (
+        ALL ( fact_team_appearances ),
+        [team_name],
+        "# matches", COUNT ( fact_team_appearances[match_id] )
+    )
+VAR _max =
+    FILTER ( _teams, [# matches] = MAXX ( _teams, [# matches] ) )
+RETURN
+    CONCATENATEX ( _max, [team_name], ", ", [team_name] )

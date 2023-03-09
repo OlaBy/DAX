@@ -1,0 +1,14 @@
+1. Countries with most tournaments won =
+VAR _winners =
+    SUMMARIZE (
+        ALL ( dim_tournaments ),
+        [Winner],
+        "Won Tournaments", COUNT ( dim_tournaments[Tournament Id] )
+    )
+VAR _rank =
+    FILTER (
+        ADDCOLUMNS ( _winners, "Rank", RANKX ( _winners, [Won Tournaments],, DESC ) ),
+        [Rank] = 1
+    )
+RETURN
+    CONCATENATEX ( _rank, [Winner], ",", [Winner] )

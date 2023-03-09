@@ -1,0 +1,32 @@
+10. Countries with most finals played but never lost =
+VAR _all =
+    SUMMARIZE (
+        FILTER ( tournament_standings, [position] IN { 1, 2 } ),
+        tournament_standings[tournament_id],
+        tournament_standings[team_name],
+        tournament_standings[position]
+    )
+VAR _finals =
+    SUMMARIZE (
+        _all,
+        [team_name],
+        "finals", COUNT ( tournament_standings[tournament_id] )
+    )
+VAR _lost =
+    DISTINCT (
+        SELECTCOLUMNS (
+            FILTER ( _all, tournament_standings[position] = 2 ),
+            "team", [team_name]
+        )
+    )
+VAR _win =
+    DISTINCT (
+        SELECTCOLUMNS (
+            FILTER ( _all, tournament_standings[position] = 1 ),
+            "team", [team_name]
+        )
+    )
+VAR _allteams =
+    DISTINCT ( SELECTCOLUMNS ( _all, "team", [team_name] ) )
+RETURN
+    CONCATENATEX ( EXCEPT ( _allteams, _lost ), [team], ", ", [team] )
