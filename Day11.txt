@@ -1,0 +1,14 @@
+11. Players with most tournamets played =
+VAR _table =
+    ADDCOLUMNS (
+        SUMMARIZE (
+            dim_players,
+            [player name],
+            "played", MAX ( dim_players[list_tournaments] )
+        ),
+        "played len", LEN ( [played] )
+    )
+VAR _max =
+    TOPN ( 1, _table, [played len], DESC )
+RETURN
+    CONCATENATEX ( _max, [player name], ", ", [player name], ASC )

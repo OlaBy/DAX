@@ -1,0 +1,38 @@
+9. Countries with most consecutive championships wins =
+VAR _table =
+    ADDCOLUMNS (
+        SUMMARIZE ( ALL ( dim_tournaments ), [Winner], [End Date] ),
+        "Next Date in Team",
+            MINX (
+                FILTER (
+                    dim_tournaments,
+                    AND (
+                        [Winner] = EARLIER ( [Winner] ),
+                        [End Date] > EARLIER ( dim_tournaments[End Date] )
+                    )
+                ),
+                [End Date]
+            ),
+        "Next Date in All",
+            MINX (
+                FILTER ( dim_tournaments, [End Date] > EARLIER ( dim_tournaments[End Date] ) ),
+                [End Date]
+            )
+    )
+VAR _winners =
+    ADDCOLUMNS (
+        _table,
+        "Consecutive",
+            IF (
+                AND ( [Next Date in Team] = [Next Date in All], [Next Date in All] <> BLANK () ),
+                1,
+                0
+            )
+    )
+RETURN
+    CONCATENATEX (
+        FILTER ( _winners, [Consecutive] = 1 ),
+        [Winner],
+        ", ",
+        [Winner]
+    )

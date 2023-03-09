@@ -1,0 +1,14 @@
+7. Countries with most finnishes in the top two =
+VAR _teams =
+    SUMMARIZE (
+        FILTER (
+            fact_team_appearances,
+            fact_team_appearances[stage_name] IN { "final", "final round" }
+        ),
+        [team_name],
+        "matches", DISTINCTCOUNT ( fact_team_appearances[tournament_id] )
+    )
+VAR _max =
+    FILTER ( _teams, [matches] = MAXX ( _teams, [matches] ) )
+RETURN
+    CONCATENATEX ( _max, [team_name], ", ", [team_name] )

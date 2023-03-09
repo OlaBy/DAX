@@ -1,0 +1,16 @@
+13. Youngest player/s when they first played =
+VAR _players =
+    ADDCOLUMNS (
+        SUMMARIZE (
+            fact_player_appearances,
+            fact_player_appearances[player_id],
+            dim_players[player name],
+            dim_players[birth_date],
+            "First match", MIN ( fact_player_appearances[match_date] )
+        ),
+        "AgeWhenFirstPlayed", DATEDIFF ( [birth_date], [First match], DAY )
+    )
+VAR _youngest =
+    TOPN ( 1, _players, [AgeWhenFirstPlayed], ASC )
+RETURN
+    CONCATENATEX ( _youngest, [player name], ", ", [player name] )

@@ -1,0 +1,15 @@
+3. Longest gap in years between tournaments =
+MAXX (
+    ALL ( dim_tournaments ),
+    DATEDIFF (
+        [End Date],
+        MINX (
+            FILTER (
+                ALL ( dim_tournaments ),
+                dim_tournaments[Start Date] > EARLIER ( dim_tournaments[Start Date] )
+            ),
+            [Start Date]
+        ),
+        YEAR
+    )
+) & " years"

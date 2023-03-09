@@ -1,0 +1,5 @@
+2. Host countries that won =
+VAR _won_hosts =
+    SUMMARIZE ( FILTER ( ALL ( dim_tournaments ), [Host Won] = 1 ), [Host Country] )
+RETURN
+    CONCATENATEX ( _won_hosts, [Host Country], ", ", [Host Country] )

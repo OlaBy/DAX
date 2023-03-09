@@ -1,0 +1,16 @@
+14. Youngest player on a final =
+VAR _table =
+    SUMMARIZE (
+        FILTER (
+            fact_player_appearances,
+            fact_player_appearances[stage_name] = "final"
+        ),
+        dim_players[player name],
+        fact_player_appearances[match_date],
+        dim_players[birth_date],
+        "day diff", DATEDIFF ( dim_players[birth_date], fact_player_appearances[match_date], DAY )
+    )
+VAR _min =
+    TOPN ( 1, _table, [day diff], ASC )
+RETURN
+    CONCATENATEX ( _min, [player name], ", ", [player name] )

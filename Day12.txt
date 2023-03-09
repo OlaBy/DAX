@@ -1,0 +1,12 @@
+12. Players with most matches played =
+VAR _players =
+    SUMMARIZE (
+        fact_player_appearances,
+        fact_player_appearances[player_id],
+        dim_players[player name],
+        "matches", COUNT ( fact_player_appearances[match_id] )
+    )
+VAR _top =
+    TOPN ( 1, _players, [matches], DESC )
+RETURN
+    CONCATENATEX ( _top, [player name], ", ", [player name], ASC )

@@ -1,0 +1,11 @@
+4. Countries with highest number of hosted tournaments =
+VAR _hosts =
+    SUMMARIZE (
+        ALL ( dim_tournaments ),
+        [Host Country],
+        "# tournaments", COUNT ( dim_tournaments[Tournament Id] )
+    )
+VAR _max =
+    FILTER ( _hosts, [# tournaments] = MAXX ( _hosts, [# tournaments] ) )
+RETURN
+    CONCATENATEX ( _max, [Host Country], ", ", [Host Country], ASC )
